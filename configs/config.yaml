@@ -1,0 +1,126 @@
+# TMG Project Configuration
+# Text Mining & Generation - Fall 2025
+
+# Project Settings
+project:
+  name: "TMG_Fall2025"
+  version: "1.0.0"
+  seed: 42
+  
+# Paths
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  splits: "splits"
+  logs: "logs"
+  models: "models"
+  notebooks: "notebooks"
+
+# Data Files
+data:
+  train_file: "train_set.csv"
+  val_file: "val_set.csv"
+  test_file: "test_set.csv"
+  processed_format: "parquet"  # parquet or csv
+  
+# Preprocessing Settings
+preprocessing:
+  # Text normalization
+  lowercase: true
+  keep_vietnamese_tones: true  # Giữ dấu tiếng Việt
+  
+  # Special token mapping
+  map_urls: true
+  url_token: "<URL>"
+  map_numbers: true
+  number_token: "<NUM>"
+  map_emojis: true
+  emoji_token: "<EMOJI>"
+  
+  # Punctuation normalization
+  normalize_punctuation: true
+  max_consecutive_punct: 3
+  
+  # Teencode handling
+  handle_teencode: true
+  teencode_dict_path: "configs/teencode_dict.json"
+  
+  # Sentence splitting (for error analysis)
+  split_sentences: true
+  sentence_sep_token: " [SEP] "
+  
+  # Deduplication
+  dedup: true
+  dedup_threshold: 0.95  # ~95% similarity threshold
+  dedup_method: "fuzzy"  # options: fuzzy, exact, embedding
+  
+  # Text length filters
+  min_length: 10
+  max_length: 5000
+  
+# Data Splitting
+splitting:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  stratify_by: ["classification", "sentiment"]  # topic & sentiment
+  ensure_all_labels: true  # Đảm bảo mỗi topic có đủ sentiment
+  min_samples_per_class: 5
+  
+# Class Imbalance Detection
+class_imbalance:
+  threshold: 0.05  # Classes < 5% are marked as "minor"
+  report: true
+  
+# Robustness & Fairness Checks
+robustness:
+  enabled: true
+  augmentation_tests:
+    - "replace_urls"
+    - "replace_numbers"
+    - "punctuation_permutation"
+    - "remove_punctuation"
+  check_small_class_bias: true
+  min_class_ratio: 0.01
+  
+# Multi-aspect Detection
+multi_aspect:
+  enabled: true
+  min_aspects: 2
+  
+# Tracking & Versioning
+tracking:
+  use_dvc: true
+  use_wandb: true
+  use_mlflow: false
+  
+  wandb:
+    project: "tmg-fall2025"
+    entity: null  # Set your W&B username/team
+    tags: ["preprocessing", "vietnamese", "text-classification"]
+    
+  mlflow:
+    tracking_uri: "mlruns"
+    experiment_name: "TMG_Preprocessing"
+    
+# DVC Settings
+dvc:
+  remote_name: "myremote"
+  remote_url: null  # Set your remote storage (S3, GCS, etc.)
+  
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/preprocessing.log"
+  
+# EDA Settings
+eda:
+  plot_distributions: true
+  plot_length_stats: true
+  plot_class_imbalance: true
+  plot_sentiment_by_topic: true
+  save_plots: true
+  plot_dir: "notebooks/figures"
+  plot_format: "png"
+  dpi: 300
