@@ -50,9 +50,9 @@ preprocessing:
   sentence_sep_token: " [SEP] "
   
   # Deduplication
-  dedup: true
+  dedup: true  # Re-enabled with faster method
   dedup_threshold: 0.95  # ~95% similarity threshold
-  dedup_method: "fuzzy"  # options: fuzzy, exact, embedding
+  dedup_method: "exact"  # CHANGED to exact for speed (options: fuzzy, exact, embedding)
   
   # Text length filters
   min_length: 10

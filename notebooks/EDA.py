@@ -252,8 +252,8 @@ print("=" * 80)
 print("\n1. Missing Values:")
 print(all_data.isnull().sum())
 
-# Duplicate check
-print(f"\n2. Duplicates: {all_data.duplicated().sum()}")
+# Duplicate check (exclude list columns)
+print(f"\n2. Duplicates (based on text_processed): {all_data.duplicated(subset=['text_processed']).sum()}")
 
 # Text length outliers
 q1 = all_data['text_length'].quantile(0.25)

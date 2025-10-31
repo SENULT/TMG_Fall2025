@@ -129,6 +129,31 @@ class DataProcessor:
         # Create stratification column
         df['_stratify'] = df[stratify_cols].astype(str).agg('_'.join, axis=1)
         
+        # Remove classes with too few samples (need at least 4 for safe 3-way split)
+        min_samples = 4
+        class_counts = df['_stratify'].value_counts()
+        small_classes = class_counts[class_counts < min_samples]
+        
+        if len(small_classes) > 0:
+            logger.warning(f"Removing {len(small_classes)} classes with < {min_samples} samples:")
+            for cls, count in small_classes.items():
+                logger.warning(f"  - {cls}: {count} samples")
+            
+            # Filter out small classes
+            df = df[~df['_stratify'].isin(small_classes.index)].reset_index(drop=True)
+            logger.info(f"Kept {len(df)} samples after filtering small classes")
+        
+        # Recheck after first split - some classes might become too small
+        # Use a higher threshold to be safe
+        class_counts_after = df['_stratify'].value_counts()
+        very_small = class_counts_after[class_counts_after < 6]
+        if len(very_small) > 0:
+            logger.warning(f"Removing {len(very_small)} more classes with < 6 samples for safety:")
+            for cls, count in very_small.items():
+                logger.warning(f"  - {cls}: {count} samples")
+            df = df[~df['_stratify'].isin(very_small.index)].reset_index(drop=True)
+            logger.info(f"Final dataset: {len(df)} samples")
+        
         # Check feasibility
         if not self.check_stratification_feasibility(df, stratify_cols):
             logger.warning("Stratification may not be perfect due to small groups")
