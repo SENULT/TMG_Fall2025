@@ -1,9 +1,9 @@
-# TMG Fall 2025 - Text Mining & Generation
+# Vietnamese Text Classification
 
 Vietnamese Text Classification Pipeline with Advanced Preprocessing, EDA, and Version Control
 
 ## 📋 Table of Contents
-
+TMG Fall 2025
 - [Overview](#overview)
 - [Features](#features)
 - [Project Structure](#project-structure)
